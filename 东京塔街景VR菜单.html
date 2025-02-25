@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VR 东京探索</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        /* 基础样式 */
+        
+         :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+        
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3);
+            transform-origin: center center;
+            scale: 0.7;
+        }
+        /* 容器尺寸 */
+        
+        .aspect-16-9 {
+            max-width: 177.78vh;
+            max-height: 56.25vw;
+        }
+        /* 面板样式 */
+        
+        .notification-panel {
+            max-width: 320px;
+            max-height: 320px;
+            scale: 0.7;
+            transform-origin: top right;
+        }
+        
+        .notification-panel .text-white {
+            font-size: 0.65rem;
+        }
+        
+        .notification-panel .text-xs {
+            font-size: 0.55rem;
+        }
+        
+        .notification-panel .text-sm {
+            font-size: 0.6rem;
+        }
+        
+        .notification-panel .mb-4 {
+            margin-bottom: 0.3rem;
+        }
+        
+        .notification-panel .space-y-3 {
+            margin-top: 0;
+        }
+        
+        .notification-panel .space-y-3>*+* {
+            margin-top: 0.2rem;
+        }
+        
+        .notification-panel .panel-item {
+            padding: 0.3rem;
+        }
+        
+        .notification-panel .w-10 {
+            width: 2rem;
+        }
+        
+        .notification-panel .h-10 {
+            height: 2rem;
+        }
+        
+        .notification-panel .mt-1 {
+            margin-top: 0.1rem;
+        }
+        
+        .notification-panel .max-h-\[250px\] {
+            max-height: 200px;
+        }
+        
+        .mini-map-panel {
+            max-width: 220px;
+            max-height: 220px;
+            scale: 0.7;
+            transform-origin: top left;
+        }
+        
+        .side-panel {
+            max-width: 320px;
+            max-height: 320px;
+            scale: 0.7;
+            transform-origin: bottom right;
+        }
+        /* 个人中心模块文字大小调整 */
+        
+        .side-panel .text-white {
+            font-size: 0.65rem;
+        }
+        
+        .side-panel .text-xs {
+            font-size: 0.55rem;
+        }
+        
+        .side-panel .text-sm {
+            font-size: 0.6rem;
+        }
+        /* 个人中心模块内部间距调整 */
+        
+        .side-panel .mb-5 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .side-panel .mb-3 {
+            margin-bottom: 0.2rem;
+        }
+        
+        .side-panel .mb-4 {
+            margin-bottom: 0.3rem;
+        }
+        
+        .side-panel .p-3 {
+            padding: 0.3rem;
+        }
+        
+        .side-panel .p-2 {
+            padding: 0.2rem;
+        }
+        
+        .side-panel .w-14 {
+            width: 2.5rem;
+        }
+        
+        .side-panel .h-14 {
+            height: 2.5rem;
+        }
+        
+        .side-panel .w-9 {
+            width: 1.8rem;
+        }
+        
+        .side-panel .h-9 {
+            height: 1.8rem;
+        }
+        
+        .side-panel .w-8 {
+            width: 1.5rem;
+        }
+        
+        .side-panel .h-8 {
+            height: 1.5rem;
+        }
+        
+        .side-panel .space-y-3>*+* {
+            margin-top: 0.2rem;
+        }
+        
+        .side-panel .max-h-\[200px\] {
+            max-height: 150px;
+        }
+        
+        .side-panel .gap-3 {
+            gap: 0.2rem;
+        }
+        /* 头像部分调整 */
+        
+        .side-panel .w-10 {
+            width: 2rem;
+        }
+        
+        .side-panel .h-10 {
+            height: 2rem;
+        }
+        
+        .side-panel .user-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.3rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .side-panel .user-info {
+            margin-left: 0.5rem;
+        }
+        /* 左下角列表特殊样式 */
+        
+        .interest-list-panel {
+            max-width: 240px;
+            max-height: 45vh;
+            scale: 0.3;
+            transform-origin: bottom left;
+        }
+        
+        .interest-list-panel .text-white {
+            font-size: 0.65rem;
+        }
+        
+        .interest-list-panel .text-xs {
+            font-size: 0.55rem;
+        }
+        
+        .interest-list-panel .text-sm {
+            font-size: 0.6rem;
+        }
+        /* 标签页按钮样式优化 */
+        
+        .interest-list-panel .tab-button {
+            white-space: nowrap;
+            padding-left: 0.2rem;
+            padding-right: 0.2rem;
+            font-size: 0.6rem;
+        }
+        
+        .interest-list-panel .tab-button i {
+            font-size: 0.6rem;
+            margin-right: 0.1rem;
+        }
+        /* 列表项内部元素样式调整 */
+        
+        .interest-list-panel .panel-item {
+            padding: 0.3rem;
+        }
+        
+        .interest-list-panel .w-8 {
+            width: 1.5rem;
+        }
+        
+        .interest-list-panel .h-8 {
+            height: 1.5rem;
+        }
+        
+        .interest-list-panel i.ri-heart-line,
+        .interest-list-panel i.ri-heart-fill,
+        .interest-list-panel i.ri-fire-line {
+            font-size: 0.6rem;
+        }
+        /* 调整面板内部间距 */
+        
+        .interest-list-panel .p-3 {
+            padding: 0.3rem;
+        }
+        
+        .interest-list-panel .space-x-2>*+* {
+            margin-left: 0.2rem;
+        }
+        
+        .interest-list-panel .mb-4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .interest-list-panel .mb-2 {
+            margin-bottom: 0.2rem;
+        }
+        
+        .interest-list-panel .mr-1 {
+            margin-right: 0.1rem;
+        }
+        
+        .bottom-tools {
+            scale: 0.7;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+        }
+        
+        .bottom-tools .creation-tool-btn {
+            min-width: 70px;
+            white-space: nowrap;
+        }
+        
+        .bottom-tools .creation-tool-btn span {
+            color: white;
+            font-size: 0.65rem;
+            margin-top: 0.25rem;
+        }
+        
+        .bottom-tools .creation-tool-btn i {
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .nav-indicator {
+            scale: 0.7;
+            bottom: 1rem;
+        }
+        /* 响应式 */
+        
+        @media (max-height: 600px) {
+            .glass-panel {
+                scale: 0.6;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .glass-panel {
+                scale: 0.65;
+            }
+        }
+        /* 文字和图标大小 */
+        
+        .text-xs {
+            font-size: 0.7rem;
+            line-height: 1rem;
+        }
+        
+        .text-sm {
+            font-size: 0.8rem;
+            line-height: 1.2rem;
+        }
+        
+        .icon-sm {
+            font-size: 1rem;
+        }
+        /* 间距和圆角 */
+        
+        .space-x-1>*+* {
+            margin-left: 0.15rem;
+        }
+        
+        .space-x-2>*+* {
+            margin-left: 0.25rem;
+        }
+        
+        .space-y-2>*+* {
+            margin-top: 0.25rem;
+        }
+        
+        .p-2 {
+            padding: 0.35rem;
+        }
+        
+        .p-3 {
+            padding: 0.5rem;
+        }
+        
+        .rounded-lg {
+            border-radius: 0.375rem;
+        }
+        
+        .rounded-xl {
+            border-radius: 0.5rem;
+        }
+        /* 创建工具按钮 */
+        
+        .creation-tool-btn {
+            @apply flex flex-col items-center justify-center p-2 rounded-lg bg-white/10 hover: bg-white/20 transition-all duration-200 text-white font-medium text-shadow;
+            min-width: 60px;
+        }
+        
+        .creation-tool-btn i {
+            @apply text-white;
+        }
+        
+        .creation-tool-btn span {
+            @apply text-white text-sm mt-1;
+        }
+        
+        .text-shadow {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tab-button.active {
+            background: rgba(87, 181, 231, 0.5);
+        }
+        
+        .mode-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .mode-btn.active {
+            background: rgba(87, 181, 231, 0.5);
+        }
+        
+        .mode-btn:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .mode-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#57B5E7',
+                        secondary: '#8DD3C7'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '4px',
+                        DEFAULT: '8px',
+                        'md': '12px',
+                        'lg': '16px',
+                        'xl': '20px',
+                        '2xl': '24px',
+                        '3xl': '32px',
+                        'full': '9999px',
+                        'button': '8px'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="h-screen w-screen overflow-hidden bg-black flex items-center justify-center">
+    <!-- 16:9 容器 -->
+    <div class="relative w-full max-w-[177.78vh] h-full max-h-[56.25vw] overflow-hidden">
+        <!-- 实际内容区域 -->
+        <div class="absolute inset-0">
+            <!-- 背景图片 -->
+            <img src="https://public.readdy.ai/ai/img_res/1cc4081ce7dc72227d06024511c4dd77.jpg" class="absolute inset-0 w-full h-full object-cover" alt="Tokyo Tower VR Scene">
+
+            <!-- 内容包装器 - 所有模块都放在这里面 -->
+            <div class="relative w-full h-full">
+                <!-- 顶部中央 - 模式切换 -->
+                <div class="absolute top-1 left-[38%] transform -translate-x-1/2 glass-panel rounded-full px-2 py-1.5 z-10">
+                    <div class="flex items-center space-x-1">
+                        <button class="mode-btn active px-3 py-1.5 rounded-full flex items-center space-x-1.5">
+                            <i class="ri-compass-3-line text-white text-sm"></i>
+                            <span class="text-white text-xs font-medium">漫游模式</span>
+                        </button>
+                        <button class="mode-btn px-3 py-1.5 rounded-full flex items-center space-x-1.5">
+                            <i class="ri-brush-line text-white text-sm"></i>
+                            <span class="text-white text-xs font-medium">涂鸦模式</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 右上角 - 最新动态 -->
+                <div class="absolute right-1 top-1 glass-panel notification-panel rounded-lg p-3 w-80">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-white text-sm font-medium">最新动态</h3>
+                        <div class="flex items-center space-x-2">
+                            <button class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/20">
+                                <i class="ri-settings-3-line text-white text-sm"></i>
+</button>
+                            <button class="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/20">
+                                <i class="ri-close-line text-white text-sm"></i>
+</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3 max-h-[200px] overflow-y-auto">
+                        <div class="panel-item rounded-xl p-3 flex items-start space-x-3 cursor-pointer">
+                            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-primary/20 rounded-full">
+                                <i class="ri-group-line text-primary text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white font-medium">社交互动</span>
+                                    <span class="text-white/60 text-xs">2分钟前</span>
+                                </div>
+                                <p class="text-white/80 text-sm mt-1">山田健一 邀请您参加东京塔VR导览活动</p>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 flex items-start space-x-3 cursor-pointer">
+                            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#FBB872]/20 rounded-full">
+                                <i class="ri-store-2-line text-[#FBB872] text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white font-medium">商城优惠</span>
+                                    <span class="text-white/60 text-xs">15分钟前</span>
+                                </div>
+                                <p class="text-white/80 text-sm mt-1">限时特惠：VR探索东京套餐立减200元</p>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 flex items-start space-x-3 cursor-pointer">
+                            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-[#FC8D62]/20 rounded-full">
+                                <i class="ri-map-pin-line text-[#FC8D62] text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white font-medium">景点推荐</span>
+                                    <span class="text-white/60 text-xs">30分钟前</span>
+                                </div>
+                                <p class="text-white/80 text-sm mt-1">新增浅草寺VR导览路线，快来体验！</p>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 flex items-start space-x-3 cursor-pointer">
+                            <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-secondary/20 rounded-full">
+                                <i class="ri-notification-4-line text-secondary text-xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-white font-medium">系统通知</span>
+                                    <span class="text-white/60 text-xs">1小时前</span>
+                                </div>
+                                <p class="text-white/80 text-sm mt-1">VR系统更新完成，新增多项交互功能</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 左上角 - 地图导航 -->
+                <div class="absolute left-1 top-1 glass-panel mini-map-panel rounded-lg p-3 w-48 h-48">
+                    <div class="relative w-full h-full rounded-lg overflow-hidden">
+                        <img src="https://public.readdy.ai/gen_page/map_placeholder_1280x720.png" class="w-full h-full object-cover" alt="Mini Map">
+                        <!-- Player Location Indicator -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div class="w-5 h-5 bg-primary rounded-full animate-pulse"></div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-primary/30 rounded-full animate-ping"></div>
+                        </div>
+                        <!-- Compass -->
+                        <div class="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/50 flex items-center justify-center">
+                            <i class="ri-compass-3-line text-white text-sm"></i>
+                        </div>
+                        <!-- Scale Bar -->
+                        <div class="absolute bottom-3 left-3 flex items-center space-x-1">
+                            <div class="h-0.5 w-10 bg-white"></div>
+                            <span class="text-white text-xs">100m</span>
+                        </div>
+                        <!-- Zoom Controls -->
+                        <div class="absolute right-3 bottom-3 flex flex-col space-y-1">
+                            <button class="w-6 h-6 bg-black/50 rounded flex items-center justify-center text-white hover:bg-black/70">
+                                <i class="ri-add-line text-sm"></i>
+</button>
+                            <button class="w-6 h-6 bg-black/50 rounded flex items-center justify-center text-white hover:bg-black/70">
+                                <i class="ri-subtract-line text-sm"></i>
+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 左下角 - 兴趣点列表 -->
+                <div class="absolute left-1 bottom-1 glass-panel interest-list-panel rounded-lg p-3 w-80 floating">
+                    <div class="flex space-x-2 mb-4 px-1 py-1 bg-white/10 rounded-full">
+                        <button class="flex-1 py-1 px-2 rounded-full text-white text-xs font-medium transition-all duration-200 tab-button active">
+                            <i class="ri-map-pin-line"></i>VR兴趣点
+</button>
+                        <button class="flex-1 py-1 px-2 rounded-full text-white text-xs font-medium transition-all duration-200 tab-button">
+                            <i class="ri-palette-line"></i>艺术品
+</button>
+                        <button class="flex-1 py-1 px-2 rounded-full text-white text-xs font-medium transition-all duration-200 tab-button">
+                            <i class="ri-restaurant-line"></i>餐厅
+</button>
+                    </div>
+                    <div class="space-y-2 max-h-[300px] overflow-y-auto tab-content" id="vr-spots">
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">东京塔观景台</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-line text-white"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 50m</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>4.8k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">浅草寺</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 1.2km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>3.2k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">明治神宫</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-line text-white"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 2.5km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>2.9k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">秋叶原电器街</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 3.1km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>2.6k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 max-h-[300px] overflow-y-auto tab-content hidden" id="museums">
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">I💗tokyo</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-line text-white"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 1.2km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>2.8k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">东京之心</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 1.8km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>2.1k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">高达show</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-line text-white"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 2.5km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>1.9k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 max-h-[300px] overflow-y-auto tab-content hidden" id="restaurants">
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">寿司大</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-line text-white"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 800m</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>2.1k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-item rounded-xl p-3 hover:bg-white/10 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white font-medium">银座久兵卫</span>
+                                <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-heart-fill text-primary"></i>
+</button>
+                            </div>
+                            <div class="flex items-center justify-between text-sm text-white/60">
+                                <span>距离 1.5km</span>
+                                <div class="flex items-center">
+                                    <i class="ri-fire-line text-[#FC8D62] mr-1"></i>
+                                    <span>1.9k 热度</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右下角 - 个人中心 -->
+                <div class="absolute right-1 bottom-1 glass-panel side-panel rounded-lg p-3 w-80 floating">
+                    <!-- 头像部分改为水平布局 -->
+                    <div class="user-header">
+                        <div class="w-10 h-10 rounded-full overflow-hidden">
+                            <img src="https://public.readdy.ai/ai/img_res/2f415f09685c6b953ef53f033e660950.jpg" class="w-full h-full object-cover" alt="User Avatar">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="text-white text-sm font-medium">陈梦琪</h3>
+                            <p class="text-white/60 text-xs">VR 探索家</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 p-2 rounded-lg bg-white/10">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-white text-xs font-medium">奖励中心</h4>
+                            <div class="flex items-center space-x-1">
+                                <i class="ri-coin-line text-yellow-400 text-sm"></i>
+                                <span class="text-white text-xs">$ISEE</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-white/10 rounded-lg p-2">
+                                <div class="flex items-center space-x-1 mb-1">
+                                    <i class="ri-gift-2-line text-primary text-sm"></i>
+                                    <span class="text-white text-xs">推荐奖励</span>
+                                </div>
+                                <p class="text-white text-sm font-medium">2,580</p>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-2">
+                                <div class="flex items-center space-x-1 mb-1">
+                                    <i class="ri-chat-heart-line text-primary text-sm"></i>
+                                    <span class="text-white text-xs">互动奖励</span>
+                                </div>
+                                <p class="text-white text-sm font-medium">1,260</p>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-2">
+                                <div class="flex items-center space-x-1 mb-1">
+                                    <i class="ri-thumb-up-line text-primary text-sm"></i>
+                                    <span class="text-white text-xs">获赞数</span>
+                                </div>
+                                <p class="text-white text-sm font-medium">856</p>
+                            </div>
+                            <div class="bg-white/10 rounded-lg p-2">
+                                <div class="flex items-center space-x-1 mb-1">
+                                    <i class="ri-advertisement-line text-primary text-sm"></i>
+                                    <span class="text-white text-xs">广告申请</span>
+                                </div>
+                                <p class="text-white text-sm font-medium">128</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 max-h-[200px] overflow-y-auto">
+                        <div class="panel-item rounded-lg p-2 flex items-center space-x-2 cursor-pointer">
+                            <div class="w-9 h-9 flex items-center justify-center bg-white/20 rounded-full">
+                                <i class="ri-user-3-line text-white text-sm"></i>
+                            </div>
+                            <span class="text-white text-sm font-medium">个人中心</span>
+                        </div>
+                        <div class="panel-item rounded-lg p-2 flex items-center space-x-2 cursor-pointer">
+                            <div class="w-8 h-8 flex items-center justify-center bg-white/20 rounded-full">
+                                <i class="ri-group-line text-white text-sm"></i>
+                            </div>
+                            <span class="text-white text-sm font-medium">社交互动</span>
+                        </div>
+                        <div class="panel-item rounded-lg p-2 flex items-center space-x-2 cursor-pointer">
+                            <div class="w-8 h-8 flex items-center justify-center bg-white/20 rounded-full">
+                                <i class="ri-notification-4-line text-white text-sm"></i>
+                            </div>
+                            <span class="text-white text-sm font-medium">消息通知</span>
+                            <span class="absolute right-3 bg-primary text-white text-xs px-2 py-1 rounded-full">3</span>
+                        </div>
+                        <div class="panel-item rounded-lg p-2 flex items-center space-x-2 cursor-pointer">
+                            <div class="w-8 h-8 flex items-center justify-center bg-white/20 rounded-full">
+                                <i class="ri-shopping-cart-line text-white text-sm"></i>
+                            </div>
+                            <span class="text-white text-sm font-medium">商城</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 底部中央 - 创作工具和导航指示器 -->
+                <div class="absolute bottom-6 left-[15%] transform glass-panel bottom-tools rounded-lg p-2">
+                    <div class="flex space-x-2">
+                        <button class="creation-tool-btn" onclick="showCreationDialog('message')">
+                            <i class="ri-message-3-line"></i>
+<span>地点留言</span>
+</button>
+                        <button class="creation-tool-btn" onclick="showCreationDialog('emoji')">
+                            <i class="ri-emotion-happy-line"></i>
+<span>放置表情</span>
+</button>
+                        <button class="creation-tool-btn" onclick="showCreationDialog('sculpture')">
+                            <i class="ri-shape-2-line"></i>
+<span>创建雕塑</span>
+</button>
+                        <button class="creation-tool-btn" onclick="showCreationDialog('ad')">
+                            <i class="ri-advertisement-line"></i>
+<span>创建广告</span>
+</button>
+                        <button class="creation-tool-btn" onclick="showCreationDialog('publish')">
+                            <i class="ri-send-plane-line"></i>
+<span>申请发布</span>
+</button>
+                        <button class="creation-tool-btn" onclick="showCreationDialog('more')">
+                            <i class="ri-more-line"></i>
+<span>更多</span>
+</button>
+                    </div>
+
+                    <!-- 导航指示器 -->
+                    <div class="absolute -bottom-14 left-1/2 transform -translate-x-1/2 glass-panel nav-indicator rounded-full px-3 py-1.5">
+                        <div class="flex items-center space-x-2">
+                            <i class="ri-compass-3-line text-white text-sm"></i>
+                            <span class="text-white text-sm font-medium">东京塔 · 距离 50m</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .tab-button.active {
+            background: rgba(87, 181, 231, 0.5);
+        }
+    </style>
+    <script>
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                button.classList.add('active');
+                // Hide all content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                // Show corresponding content
+                const tabName = button.textContent.trim().toLowerCase().includes('vr') ? 'vr-spots' :
+                    button.textContent.trim().toLowerCase().includes('艺术品') ? 'museums' : 'restaurants';
+                document.getElementById(tabName).classList.remove('hidden');
+            });
+        });
+
+        // 模式切换按钮交互
+        document.querySelectorAll('.mode-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all mode buttons
+                document.querySelectorAll('.mode-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                // 根据模式显示或隐藏相关功能
+                const isDrawMode = button.textContent.trim().includes('涂鸦');
+                if (isDrawMode) {
+                    // 可以在这里添加涂鸦模式特有的UI元素显示逻辑
+                    console.log('切换到涂鸦模式');
+                } else {
+                    // 漫游模式特有的UI元素显示逻辑
+                    console.log('切换到漫游模式');
+                }
+            });
+        });
+
+        // Handle favorite buttons
+        document.querySelectorAll('.panel-item button').forEach(button => {
+            button.addEventListener('click', () => {
+                const icon = button.querySelector('i');
+                if (icon.classList.contains('ri-heart-line')) {
+                    icon.classList.remove('ri-heart-line', 'text-white');
+                    icon.classList.add('ri-heart-fill', 'text-primary');
+                } else {
+                    icon.classList.remove('ri-heart-fill', 'text-primary');
+                    icon.classList.add('ri-heart-line', 'text-white');
+                }
+            });
+        });
+    </script>
+    <script>
+        function showCreationDialog(type) {
+            const dialogContent = {
+                message: {
+                    title: '添加地点留言',
+                    icon: 'ri-message-3-line',
+                    fields: [{
+                        type: 'text',
+                        placeholder: '输入留言内容...'
+                    }, {
+                        type: 'select',
+                        options: ['公开', '仅好友可见', '私密']
+                    }]
+                },
+                emoji: {
+                    title: '放置表情',
+                    icon: 'ri-emotion-happy-line',
+                    fields: [{
+                        type: 'emoji-picker'
+                    }, {
+                        type: 'range',
+                        label: '大小',
+                        min: 1,
+                        max: 10
+                    }]
+                },
+                sculpture: {
+                    title: '创建3D雕塑',
+                    icon: 'ri-shape-2-line',
+                    fields: [{
+                        type: 'model-picker',
+                        label: '选择模型'
+                    }, {
+                        type: 'color',
+                        label: '颜色'
+                    }, {
+                        type: 'range',
+                        label: '大小',
+                        min: 1,
+                        max: 10
+                    }]
+                },
+                ad: {
+                    title: '创建广告',
+                    icon: 'ri-advertisement-line',
+                    fields: [{
+                        type: 'file',
+                        label: '上传广告图片'
+                    }, {
+                        type: 'text',
+                        placeholder: '广告标题'
+                    }, {
+                        type: 'textarea',
+                        placeholder: '广告描述'
+                    }]
+                },
+                publish: {
+                    title: '申请发布',
+                    icon: 'ri-send-plane-line',
+                    fields: [{
+                        type: 'text',
+                        placeholder: '创作标题'
+                    }, {
+                        type: 'textarea',
+                        placeholder: '创作说明'
+                    }, {
+                        type: 'select',
+                        options: ['原创', '改编', '合作']
+                    }]
+                },
+                more: {
+                    title: '更多创作工具',
+                    icon: 'ri-more-line',
+                    fields: [{
+                        type: 'tool-grid',
+                        tools: ['音乐', '视频', '特效', '互动']
+                    }]
+                }
+            };
+            const content = dialogContent[type];
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+            dialog.innerHTML = `
+<div class="glass-panel rounded-2xl p-6 w-96">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center space-x-3">
+<i class="${content.icon} text-white text-2xl"></i>
+<h3 class="text-white font-medium">${content.title}</h3>
+</div>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20">
+<i class="ri-close-line text-white"></i>
+</button>
+</div>
+<div class="space-y-4">
+${content.fields.map(field => {
+if(field.type === 'text') {
+return `<input type="text" placeholder="${field.placeholder}" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white placeholder-white/60">`;
+}
+if(field.type === 'select') {
+return `
+<select class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white">
+${field.options.map(opt => `<option>${opt}</option>`).join('')}
+</select>
+`;
+}
+if(field.type === 'emoji-picker') {
+return `<div class="grid grid-cols-6 gap-2 bg-white/10 p-3 rounded-xl">
+${['😊','😂','🥰','😎','🤔','😴','👋','🎉','❤️','🌟','🎵','✨'].map(emoji =>
+`<button class="text-2xl hover:scale-110 transition-transform">${emoji}</button>`
+).join('')}
+</div>`;
+}
+if(field.type === 'range') {
+return `
+<div class="space-y-2">
+<label class="text-white text-sm">${field.label}</label>
+<input type="range" min="${field.min}" max="${field.max}" class="w-full">
+</div>
+`;
+}
+if(field.type === 'model-picker') {
+return `
+<div class="grid grid-cols-3 gap-3 bg-white/10 p-3 rounded-xl">
+${['立方体','球体','圆柱','金字塔','星形','心形'].map(model =>
+`<button class="p-3 bg-white/10 rounded-lg hover:bg-white/20 text-white text-sm">${model}</button>`
+).join('')}
+</div>
+`;
+}
+if(field.type === 'color') {
+return `
+<div class="space-y-2">
+<label class="text-white text-sm">${field.label}</label>
+<div class="flex space-x-2">
+${['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEEAD','#D4A5A5'].map(color =>
+`<button class="w-8 h-8 rounded-full" style="background-color: ${color}"></button>`
+).join('')}
+</div>
+</div>
+`;
+}
+if(field.type === 'file') {
+return `
+<div class="space-y-2">
+<label class="text-white text-sm">${field.label}</label>
+<div class="border-2 border-dashed border-white/20 rounded-xl p-4 text-center">
+<i class="ri-upload-cloud-line text-white text-2xl mb-2"></i>
+<p class="text-white/60 text-sm">点击或拖拽文件上传</p>
+</div>
+</div>
+`;
+}
+if(field.type === 'textarea') {
+return `<textarea placeholder="${field.placeholder}" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-white placeholder-white/60 h-24"></textarea>`;
+}
+if(field.type === 'tool-grid') {
+return `
+<div class="grid grid-cols-2 gap-3">
+${field.tools.map(tool =>
+`<button class="p-4 bg-white/10 rounded-xl hover:bg-white/20 text-white">${tool}</button>`
+).join('')}
+</div>
+`;
+}
+return '';
+}).join('')}
+</div>
+<div class="mt-6 flex justify-end space-x-3">
+<button class="px-4 py-2 rounded-button bg-white/10 text-white hover:bg-white/20">取消</button>
+<button class="px-4 py-2 rounded-button bg-primary text-white hover:bg-primary/80">确认</button>
+</div>
+</div>
+`;
+document.body.appendChild(dialog);
+const closeBtn = dialog.querySelector('.ri-close-line').parentElement;
+const cancelBtn = dialog.querySelector('.bg-white\\/10.text-white');
+const confirmBtn = dialog.querySelector('.bg-primary');
+[closeBtn, cancelBtn].forEach(btn => {
+btn.addEventListener('click', () => dialog.remove());
+});
+confirmBtn.addEventListener('click', () => {
+// 这里可以添加创建逻辑
+dialog.remove();
+});
+}
+    </script>
+</body>
+
+</html>
